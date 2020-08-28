@@ -1,58 +1,130 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div>
+    <button @click="randomStart()" class="btn btn-danger btn-lg mb-2">Start</button>
+    <div class="row">
+      <div class="col">
+        <button @click="randomDamage(3,10)" class="btn btn-primary mb-4">Attack</button> 
+        <button @click="randomDamageSP(10,20)" class="btn btn-info mb-4">Ultimate  Attack</button> 
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <div class="alert alert-primary" role="alert">Character : {{randomPlayer}} HP : {{hp1}}</div> 
+          <img :src="image1" class="img-fluid" />
+        </div>
+        <div class="col">
+          <div class="alert alert-primary" role="alert">Character : {{randomMonster}} HP : {{hp2}}</div> 
+          <img :src="image2" class="img-fluid" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  data: function () {
+    return {
+      randomAttack: "",
+      randomSpAttack: "",
+      image1: "",
+      image2: "",
+      hp1: "",
+      hp2: "",
+      win: "./assets/win.png", 
+      lose: "./assets/lose.png", 
+      player: [
+        {
+          name: "Ironman", 
+          hp: 160, 
+          image: "./assets/ironman.png" 
+        },
+        {
+          name: "captain america", 
+          hp: 160, 
+          image: "./assets/cap.png", 
+        },
+        {
+          name: "Thor", 
+          hp: 200, 
+          image: "./assets/thor.png", 
+        },
+      ],
+      randomPlayer: "",
+      monster: [
+        {
+          name: "Loki", 
+          hp: 150, 
+          image: "./assets/lokii.png", 
+        },
+        {
+          name: "Hela", 
+          hp: 170,
+          image: "./assets/helaa.png", 
+        },
+        {
+          name: "Thanos", 
+          hp: 200, 
+          image: "./assets/thanos.png", 
+        },
+      ],
+      randomMonster: "",
+    };
+  },
+
   props: {
-    msg: String
-  }
-}
+    Label: String,
+  },
+
+  methods: {
+    randomStart: function () {
+      var chosenNumber1 = Math.floor(Math.random() * this.player.length);
+      this.randomPlayer = this.player[chosenNumber1].name;
+      this.hp1 = this.player[chosenNumber1].hp;
+      this.image1 = this.player[chosenNumber1].image;
+
+      var chosenNumber2 = Math.floor(Math.random() * this.monster.length);
+      this.randomMonster = this.monster[chosenNumber2].name;
+      this.hp2 = this.monster[chosenNumber2].hp;
+      this.image2 = this.monster[chosenNumber2].image;
+    },
+
+    randomDamage: function (min, max) {
+      this.randomAttack = Math.max(Math.floor(Math.random() * max) + 1, min);
+      if (this.hp1 != 0 && this.hp2 != 0) {
+        this.hp1 -= this.randomAttack;
+      }
+      if (this.hp1 != 0 && this.hp2 != 0) {
+        this.hp2 -= this.randomAttack;
+      }
+      if (this.hp1 <= 0) {
+        this.hp1 = 0;
+        this.image1 = this.lose;
+      }
+      if (this.hp2 <= 0) {
+        this.hp2 = 0;
+        this.image2 = this.win;
+      }
+    },
+
+    randomDamageSP: function (min, max) {
+      this.randomAttack = Math.max(Math.floor(Math.random() * max) + 1, min);
+      if (this.hp1 != 0 && this.hp2 != 0) {
+        this.hp2 -= this.randomAttack;
+      }
+      if (this.hp1 <= 0) {
+        this.hp1 = 0;
+        this.image1 = this.lose;
+      }
+      if (this.hp2 <= 0) {
+        this.hp2 = 0;
+        this.image2 = this.win;
+      }
+    },
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style>
 </style>
